@@ -10,6 +10,13 @@ class HomePage extends StatelessWidget {
         title: const Text(
           "Learing Flutter",
         ),
+        centerTitle: true,
+      ),
+      body: const Center(
+        child: Text(
+          "Hello World",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
