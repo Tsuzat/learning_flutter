@@ -1,6 +1,5 @@
-## master branch
-It has default flutter application comes as boiler code.
-
+## branch Day4
+Adding Images, Google Fonts, ElevatedButton, Login Page
 ### How to fix minimum width and height of desktop app
 
 Install dependency by adding it in pubspec.yaml and add `desktop_window: ^0.4.0` in dependencies
