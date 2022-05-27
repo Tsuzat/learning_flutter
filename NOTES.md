@@ -1,7 +1,7 @@
-## Branch Day4
+## Branch Day5
 
 Adding Images, Google Fonts, ElevatedButton, Login Page
-### Adding googl fonts
+### Adding google fonts
 
 Install dependency by adding it in pubspec.yaml and add `google_fonts: ^3.0.1` in dependencies
 import google_fonts in main.dart and modify code as follow
