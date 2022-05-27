@@ -1,41 +1,83 @@
-## Branch Day5
+## Branch Day6
 
-Adding SingleChildScrollView, routes and Navigator
-### [SingleChildScrollView]("https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html")
+StatefullWidget, ElevatedButton, AnimatedContainer and delay (async, await) in nevigation. 
+### [StatefullWidget]("https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html")
 
-`SingleChildScrollView` lets you add flexibility in overflowing widget. This property has been added in login_page.dart. This avoid bottom overflow.
-
+A `StatefullWidget` is a widget in which the data inside can be modified. 
 ```dart
-SingleChildScrollView(
-  child: Column(
-  ),
+class SampleWidget extends StatefulWidget {
+  const SampleWidget({Key? key}) : super(key: key);
+
+  @override
+  State<SampleWidget> createState() => _SampleWidgetState();
+}
+
+class _SampleWidgetState extends State<SampleWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+```
+`StatefullWidget` is implemented in `login_page.dart`
+
+### [ElevatedButton]("https://api.flutter.dev/flutter/material/ElevatedButton-class.html")
+
+`ElevatedButton` has different properties to impliment. In `onPressed()` we can push route.
+```dart
+ElevatedButton(
+    style: TextButton.styleFrom(
+    fixedSize: const Size(80, 40),
+    ),
+    onPressed: () {
+    Navigator.pushNamed(context, MyRoutes.homeRoute);
+    },
+    child: const Text("Login"),
 )
 ```
+`ElevatedButton` can be removed and making custom button. 
+### [AnimatedContainer]("https://api.flutter.dev/flutter/widgets/AnimatedContainer-class.html")
 
-### Adding MyRoutes class
+Using `InkWell` to give `AnimatedContainer` a properties to be clicked. It has `onTap()` with which we can navigate in different pages and change different properties.
 
-Making a class `MyRouted` in `utils/routes.dart`. This class has static members which allows us to use it's properties without initialising the class. 
-```dart
-class MyRoutes {
-  static String loginRoute = "/login";
-  static String homeRoute = "/";
-}
-```
-`MyRoutes` class contains routes to different pages/screens. This can be directly used as routes. 
+`AnimatedContainer` needs duration to be defined as animation time.
 
 ```dart
-initialRoute: MyRoutes.loginRoute,
-routes: {
-  MyRoutes.homeRoute: (context) => const HomePage(),
-  MyRoutes.loginRoute: (context) => const LoginPage(),
-}
+bool changedButton = false;
+InkWell(
+    onTap: () async {
+        setState(
+        () {
+            changedButton = true;
+        },
+        );
+        // wait before nevagating to new page/screen
+        await Future.delayed(const Duration(milliseconds: 600));
+        Navigator.pushNamed(context, MyRoutes.homeRoute);
+    }, // onTap
+    child: AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
+        width: changedButton ? 40 : 80,
+        height: 40,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+        color: Colors.deepPurple,
+        borderRadius: BorderRadius.circular(
+            changedButton ? 40 : 8,
+        ),
+        ),
+        child: changedButton
+            ? const Icon(
+                Icons.done,
+                color: Colors.white,
+            )
+            : const Text(
+                "Login",
+                style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+                ),
+        ),
+    ),
+),
 ```
-Adding the above code in `Material()` will assure the better routing.
-
-In login page/screen, `login` button has a property `onPressed()` which is manipulated to navigate in `home` page/screen.
-```dart
-onPressed: () {
-  Navigator.pushNamed(context, MyRoutes.homeRoute);
-}
-```
-`Navigator.pushNamed()` takes  `context` and name of the route you want to navigate to, i.e. `MyRoutes.homeRoute` in this case.
