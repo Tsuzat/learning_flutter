@@ -1,54 +1,41 @@
 ## Branch Day5
 
-Adding Images, Google Fonts, ElevatedButton, Login Page
-### Adding google fonts
+Adding SingleChildScrollView, routes and Navigator
+### [SingleChildScrollView]("https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html")
 
-Install dependency by adding it in pubspec.yaml and add `google_fonts: ^3.0.1` in dependencies
-import google_fonts in main.dart and modify code as follow
+`SingleChildScrollView` lets you add flexibility in overflowing widget. This property has been added in login_page.dart. This avoid bottom overflow.
 
 ```dart
-import 'package:google_fonts/google_fonts.dart';
+SingleChildScrollView(
+  child: Column(
+  ),
+)
+```
 
-@override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      themeMode: ThemeMode.light,
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        fontFamily: GoogleFonts.lato().fontFamily,
-      ),
-      // home: HomePage(),
-    );
+### Adding MyRoutes class
+
+Making a class `MyRouted` in `utils/routes.dart`. This class has static members which allows us to use it's properties without initialising the class. 
+```dart
+class MyRoutes {
+  static String loginRoute = "/login";
+  static String homeRoute = "/";
 }
 ```
-
-### Adding Image
-
-Add assets folder pubspec.yaml as 
-```yaml
-  assets:
-    - assets/images/
-```
-mind indentation in pubspec.yaml
-
-In flutter, Images can be added using various methos.
-Here, `Image.asset()` has been used
+`MyRoutes` class contains routes to different pages/screens. This can be directly used as routes. 
 
 ```dart
-Image.asset(
-  "assets/images/undraw_secure_login_pdn4.png",
-  fit: BoxFit.cover,
-)
+initialRoute: MyRoutes.loginRoute,
+routes: {
+  MyRoutes.homeRoute: (context) => const HomePage(),
+  MyRoutes.loginRoute: (context) => const LoginPage(),
+}
 ```
-`fit` has different attributes which can be used as `BoxFit.cover` and many more. `BoxFit.cover` assures that image will stretched to fit the widget. 
+Adding the above code in `Material()` will assure the better routing.
 
-### [Elevated Button](https://api.flutter.dev/flutter/material/ElevatedButton-class.html)
-
-Refer to docs for better understanding.
+In login page/screen, `login` button has a property `onPressed()` which is manipulated to navigate in `home` page/screen.
 ```dart
-ElevatedButton(
-  child: const Text("Login"),
-  onPressed: () {},
-)
+onPressed: () {
+  Navigator.pushNamed(context, MyRoutes.homeRoute);
+}
 ```
-
+`Navigator.pushNamed()` takes  `context` and name of the route you want to navigate to, i.e. `MyRoutes.homeRoute` in this case.
