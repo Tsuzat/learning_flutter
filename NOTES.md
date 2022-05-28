@@ -1,83 +1,90 @@
 ## Branch Day6
 
-StatefullWidget, ElevatedButton, AnimatedContainer and delay (async, await) in nevigation. 
-### [StatefullWidget]("https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html")
+Form and FormKey validation
 
-A `StatefullWidget` is a widget in which the data inside can be modified. 
-```dart
-class SampleWidget extends StatefulWidget {
-  const SampleWidget({Key? key}) : super(key: key);
+### Removed Imkwell
+Inkwell, used for login button, has been removed and ElevatedButton has been implemented.
 
-  @override
-  State<SampleWidget> createState() => _SampleWidgetState();
-}
+### Form validation
 
-class _SampleWidgetState extends State<SampleWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
+Wrapping the TextFormField inside Form widget gives us the power to validate the data. For that we need to add a key for reference.
+
+Add following line to define private variable of the class _LoginPageState
+```Dart
+final _formkey = GlobalKey<FormState>();
 ```
-`StatefullWidget` is implemented in `login_page.dart`
-
-### [ElevatedButton]("https://api.flutter.dev/flutter/material/ElevatedButton-class.html")
-
-`ElevatedButton` has different properties to impliment. In `onPressed()` we can push route.
+use this `_formkey` as argument for `key` in `Form` widget. 
 ```dart
-ElevatedButton(
-    style: TextButton.styleFrom(
-    fixedSize: const Size(80, 40),
-    ),
-    onPressed: () {
-    Navigator.pushNamed(context, MyRoutes.homeRoute);
-    },
-    child: const Text("Login"),
-)
-```
-`ElevatedButton` can be removed and making custom button. 
-### [AnimatedContainer]("https://api.flutter.dev/flutter/widgets/AnimatedContainer-class.html")
-
-Using `InkWell` to give `AnimatedContainer` a properties to be clicked. It has `onTap()` with which we can navigate in different pages and change different properties.
-
-`AnimatedContainer` needs duration to be defined as animation time.
-
-```dart
-bool changedButton = false;
-InkWell(
-    onTap: () async {
-        setState(
-        () {
-            changedButton = true;
-        },
-        );
-        // wait before nevagating to new page/screen
-        await Future.delayed(const Duration(milliseconds: 600));
-        Navigator.pushNamed(context, MyRoutes.homeRoute);
-    }, // onTap
-    child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        width: changedButton ? 40 : 80,
-        height: 40,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-        color: Colors.deepPurple,
-        borderRadius: BorderRadius.circular(
-            changedButton ? 40 : 8,
-        ),
-        ),
-        child: changedButton
-            ? const Icon(
-                Icons.done,
-                color: Colors.white,
-            )
-            : const Text(
-                "Login",
-                style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
+Form(
+    key: _formkey,
+    child: Padding(
+    padding:
+        const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+        child: Column(
+            children: [
+            // username
+                TextFormField(
+                    decoration: const InputDecoration(
+                    icon: Icon(Icons.person),
+                    hintText: "Enter username",
+                    labelText: "Username",
+                    ),
+                    onChanged: (value) {
+                    _name = value;
+                    setState(() {});
+                    },
+                    validator: (value) {
+                        if (value == null || value.isEmpty) {
+                            return "Username can not be empty";
+                        }
+                        return null;
+                    },
                 ),
+                const SizedBox(
+                    height: 10,
+                ),
+                // password
+                TextFormField(
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                    icon: Icon(Icons.key),
+                    hintText: "Enter password",
+                    labelText: "Password",
+                    ),
+                    validator: (value) {
+                        if (value == null || value.isEmpty) {
+                            return "Password can not be empty";
+                        } else if (value.length < 6) {
+                            return "Password can not be less than 6 character";
+                        }
+                        return null;
+                    },
+                ),
+                const SizedBox(
+                    height: 30,
+                ),
+                ElevatedButton(
+                    style: TextButton.styleFrom(
+                    fixedSize: const Size(80, 40),
+                    ),
+                    onPressed: () {
+                        if (_formkey.currentState!.validate()) {
+                            Navigator.pushNamed(context, MyRoutes.homeRoute);
+                        }
+                    },
+                    child: const Text("Login"),
+                ),
+            ],
         ),
     ),
 ),
 ```
+In `TextFormField`, validator has been added which return the instant of string that has been placed inside the `TextFormField`. By using an API we can check if `username` and `password` are valid. and then, validation has been added in `onPressed()` function in `ElevatedButton` widget.  
+```dart
+onPressed: () {
+    if (_formkey.currentState!.validate()) {
+        Navigator.pushNamed(context, MyRoutes.homeRoute);
+    }
+},
+```
+This will let you navigate only if form is valid. 
