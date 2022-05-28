@@ -1,75 +1,70 @@
-## Branch Day9
+## Branch Day10
 
-Adding Drawer and ListView
+Adding ThemeData and Models
 
-### [Drawer]('https://api.flutter.dev/flutter/material/Drawer-class.html')
+### [ThemeData]("https://api.flutter.dev/flutter/material/ThemeData-class.html")
 
-In `Scaffold()`, we can add `drawer` as a widget. Here we're using `Drawer` widget.
-Putting the following code in `drawer.dart`
+Made a class `MyTheme` in `theme.dart`. Following code was put there.
 ```dart
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-TextStyle textStyle(double size, Color color) {
-  return TextStyle(
-    fontSize: size,
-    color: color,
-  );
-}
-
-class MyDrawer extends StatelessWidget {
-  const MyDrawer({Key? key}) : super(key: key);
-
-  final _imageURL = "https://imgflip.com/s/meme/Smiling-Cat.jpg";
-
-  ListTile _drawerItems(Icon icon, String title) {
-    return ListTile(
-      leading: icon,
-      iconColor: Colors.white,
-      title: Text(
-        title,
-        style: textStyle(16, Colors.white),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: Container(
-        color: Colors.deepPurple,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              padding: EdgeInsets.zero,
-              child: UserAccountsDrawerHeader(
-                accountName: Text(
-                  "account name",
-                  style: textStyle(14, Colors.white),
-                ),
-                accountEmail: Text(
-                  "account@name.com",
-                  style: textStyle(14, Colors.white),
-                ),
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: NetworkImage(_imageURL),
-                ),
-              ),
-            ),
-            _drawerItems(const Icon(CupertinoIcons.home), 'Home'),
-            _drawerItems(const Icon(CupertinoIcons.person_alt_circle), 'Profile'),
-            _drawerItems(const Icon(CupertinoIcons.mail), 'Email Me'),
-            _drawerItems(const Icon(CupertinoIcons.phone), '+91 000 000 0000'),
-          ],
+class MyTheme {
+  static ThemeData lightTheme() => ThemeData(
+        primarySwatch: Colors.deepPurple,
+        fontFamily: GoogleFonts.lato().fontFamily,
+        appBarTheme: const AppBarTheme(
+          color: Colors.white,
+          elevation: 0.0,
+          iconTheme: IconThemeData(
+            color: Colors.black,
+          ),
+          titleTextStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 ```
-`MyDrawer` class returns a Widget Drawer. We define a child `Container` to provide `color` to whole drawer. `Container` has a `ListView` [(ListView Docs)]("https://api.flutter.dev/flutter/widgets/ListView-class.html") child with different children. On the top, we have `UserAccountsDrawerHeader` which lets you put user account's info. Here `accountName` and `accountEmail` is required. Here `currentAccountPicture` is also given as `CircleAvatar` with a `backgroundImage` with an `ImageProvider` as `NetworkImage()`.
+`AppBar` theme is also defined here.
 
-### [ListTile]("https://api.flutter.dev/flutter/material/ListTile-class.html")
+This property is used directly in `main.dart` in `MaterialApp()` as 
+```dart
+MaterialApp(
+  themeMode: ThemeMode.light,
+  theme: MyTheme.lightTheme(),
+  // home: HomePage(),
+  debugShowCheckedModeBanner: false,
+  initialRoute: MyRoutes.homeRoute,
+  routes: {
+    MyRoutes.homeRoute: (context) => const HomePage(),
+    MyRoutes.loginRoute: (context) => const LoginPage(),
+  },
+)
+```
+This helps to organise the code.
 
-`ListTile` has many properties which allow as to implement beutiful list components as we have used here. Local function `_drawerItems()` returns `ListTile` with given arguments. 
+### Models
+
+Adding a `models` folder and adding `catalog.dart` to define the a model as a class `Item`.
+```dart
+class Item {
+  final String id;
+  final String name;
+  final String desc;
+  final num prince;
+  final String color;
+  final String image;
+
+  Item(
+      {required this.id,
+      required this.name,
+      required this.desc,
+      required this.prince,
+      required this.color,
+      required this.image});
+}
+```
+Class `Item` has different properties and the constructor `Item()` is made in such a way that class need to be initialise with specific parameter passed. 
