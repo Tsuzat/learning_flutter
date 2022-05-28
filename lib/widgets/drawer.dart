@@ -1,12 +1,3 @@
-## Branch Day9
-
-Adding Drawer and ListView
-
-### [Drawer]('https://api.flutter.dev/flutter/material/Drawer-class.html')
-
-In `Scaffold()`, we can add `drawer` as a widget. Here we're using `Drawer` widget.
-Putting the following code in `drawer.dart`
-```dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -67,9 +58,3 @@ class MyDrawer extends StatelessWidget {
     );
   }
 }
-```
-`MyDrawer` class returns a Widget Drawer. We define a child `Container` to provide `color` to whole drawer. `Container` has a `ListView` [(ListView Docs)]("https://api.flutter.dev/flutter/widgets/ListView-class.html") child with different children. On the top, we have `UserAccountsDrawerHeader` which lets you put user account's info. Here `accountName` and `accountEmail` is required. Here `currentAccountPicture` is also given as `CircleAvatar` with a `backgroundImage` with an `ImageProvider` as `NetworkImage()`.
-
-### [ListTile]("https://api.flutter.dev/flutter/material/ListTile-class.html")
-
-`ListTile` has many properties which allow as to implement beutiful list components as we have used here. Local function `_drawerItems()` returns `ListTile` with given arguments. 
