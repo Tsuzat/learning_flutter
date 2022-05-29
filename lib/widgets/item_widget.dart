@@ -11,7 +11,12 @@ class ItemWidget extends StatelessWidget {
     return Card(
       child: ListTile(
         onTap: () {},
-        leading: Image.network(item.image),
+        leading: SizedBox(
+            width: 60,
+          child: Image.network(
+            item.image,
+          ),
+        ),
         title: Text(
           item.title,
           overflow: TextOverflow.ellipsis,
@@ -22,9 +27,10 @@ class ItemWidget extends StatelessWidget {
         ),
         trailing: Text(
           "\$ ${item.price}",
-          textScaleFactor: 1.2,
+          textScaleFactor: 1.1,
           style: const TextStyle(
             fontWeight: FontWeight.w600,
+            color: Colors.deepPurpleAccent,
           ),
         ),
       ),
