@@ -1,70 +1,58 @@
-## Branch Day10
+## Branch Day12
 
-Adding ThemeData and Models
+ListView Builder, List Generation & Card
 
-### [ThemeData]("https://api.flutter.dev/flutter/material/ThemeData-class.html")
+### [ListView.builder]("https://api.flutter.dev/flutter/widgets/ListView-class.html")
 
-Made a class `MyTheme` in `theme.dart`. Following code was put there.
+`ListView.builder()` gives us really infinite scrollable list view by rendering on screen data. 
+
 ```dart
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-class MyTheme {
-  static ThemeData lightTheme() => ThemeData(
-        primarySwatch: Colors.deepPurple,
-        fontFamily: GoogleFonts.lato().fontFamily,
-        appBarTheme: const AppBarTheme(
-          color: Colors.white,
-          elevation: 0.0,
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
-          titleTextStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
-}
-```
-`AppBar` theme is also defined here.
-
-This property is used directly in `main.dart` in `MaterialApp()` as 
-```dart
-MaterialApp(
-  themeMode: ThemeMode.light,
-  theme: MyTheme.lightTheme(),
-  // home: HomePage(),
-  debugShowCheckedModeBanner: false,
-  initialRoute: MyRoutes.homeRoute,
-  routes: {
-    MyRoutes.homeRoute: (context) => const HomePage(),
-    MyRoutes.loginRoute: (context) => const LoginPage(),
+child: ListView.builder(
+  itemCount: dummyList.length,
+  itemBuilder: (context, index) {
+    return ItemWidget(
+      item: dummyList[index],
+    );
   },
 )
 ```
-This helps to organise the code.
-
-### Models
-
-Adding a `models` folder and adding `catalog.dart` to define the a model as a class `Item`.
+here `itemBuilder` is a required parameter. `dummyList` is a list with 20 dummy data generated as
 ```dart
-class Item {
-  final String id;
-  final String name;
-  final String desc;
-  final num prince;
-  final String color;
-  final String image;
+final dummyList = List.generate(20, (index) => CatalogModel.items[0]);
+```
+`CatalogModel` is a class which consist list of `Item` class. Refer to `lib\models\catalog.dart`
 
-  Item(
-      {required this.id,
-      required this.name,
-      required this.desc,
-      required this.prince,
-      required this.color,
-      required this.image});
+`ItemWidget` is a stateless widget. 
+
+```dart
+class ItemWidget extends StatelessWidget {
+  final Item item;
+  const ItemWidget({Key? key, required this.item}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        onTap: () {},
+        leading: Image.network(item.image),
+        title: Text(
+          item.title,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          item.desc,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: Text(
+          "\$ ${item.price}",
+          textScaleFactor: 1.2,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
 }
 ```
-Class `Item` has different properties and the constructor `Item()` is made in such a way that class need to be initialise with specific parameter passed. 
+It takes an `item` as required parameter which is an instance of class `Item`. `ItemWidget` returns a `Card` containing a `ListTile`. The `Card` makes `ListTile` more fancy and good looking.
