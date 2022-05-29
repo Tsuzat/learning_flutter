@@ -1,58 +1,43 @@
-## Branch Day12
+## Branch Day 13
 
-ListView Builder, List Generation & Card
+Loading and Decoding JSON
 
-### [ListView.builder]("https://api.flutter.dev/flutter/widgets/ListView-class.html")
+### Loading JSON
 
-`ListView.builder()` gives us really infinite scrollable list view by rendering on screen data. 
-
-```dart
-child: ListView.builder(
-  itemCount: dummyList.length,
-  itemBuilder: (context, index) {
-    return ItemWidget(
-      item: dummyList[index],
-    );
-  },
-)
-```
-here `itemBuilder` is a required parameter. `dummyList` is a list with 20 dummy data generated as
-```dart
-final dummyList = List.generate(20, (index) => CatalogModel.items[0]);
-```
-`CatalogModel` is a class which consist list of `Item` class. Refer to `lib\models\catalog.dart`
-
-`ItemWidget` is a stateless widget. 
+First, the path of the JSON file should be specified in `pubspec.yaml`. We converted `HomePage()` widget to `StatefullWidget` since now we'll bw loading data dynamically. For that we need to override a methos call `inState()` and then we can add following lines. (Refer to `lib\pages\home_page.dart`)
 
 ```dart
-class ItemWidget extends StatelessWidget {
-  final Item item;
-  const ItemWidget({Key? key, required this.item}) : super(key: key);
+import 'package:flutter/services.dart';
+import 'dart:convert';
+@override
+void initState() {
+  super.initState();
+  loadData();
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        onTap: () {},
-        leading: Image.network(item.image),
-        title: Text(
-          item.title,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Text(
-          item.desc,
-          overflow: TextOverflow.ellipsis,
-        ),
-        trailing: Text(
-          "\$ ${item.price}",
-          textScaleFactor: 1.2,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
+void loadData() async {
+  var catalogJson = await rootBundle.loadString("assets/data/catalog.json");
+  var decodedJson = jsonDecode(catalogJson);
+  print(decodedJson);
 }
 ```
-It takes an `item` as required parameter which is an instance of class `Item`. `ItemWidget` returns a `Card` containing a `ListTile`. The `Card` makes `ListTile` more fancy and good looking.
+Here, `rootBundle` is imported from `service.dart` which helps us to read json as an string. This string is decode further to return an object with the help of `jsonDecode()` which is a import of `dart:convert`.
+We can print this decoded data to check if everything is fine or not.
+
+### JSON data generation
+
+The data in `assets\data\catalog.json` is fetched from an API named [FakeStore API]("https://fakestoreapi.com/docs"). The data is collected with the help of following `python` code.
+
+```python
+import requests
+import json
+
+source = requests.get("https://fakestoreapi.com/products?limit=30")
+
+if source.ok:
+    data = source.json()
+    with open("catalog.json","w") as f:
+        json.dump(data,f)
+else:
+    print("data could not be fetched")
+```
